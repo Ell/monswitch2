@@ -1,7 +1,4 @@
-use std::{borrow::Borrow, sync::Arc};
-
 use anyhow::Result;
-use futures::lock::Mutex;
 use iced::{Align, Column, Element, Image, Length, Row, Text};
 
 use crate::{Error, Message};
@@ -15,6 +12,7 @@ lazy_static! {
 pub struct Monitor<'a> {
     id: String,
     model_name: Option<String>,
+    display: &'a ddc_hi::Display,
 }
 
 impl<'a> Monitor<'a> {
@@ -25,7 +23,7 @@ impl<'a> Monitor<'a> {
                 let model_name = display.info.model_name.clone();
                 let id = display.info.id.clone();
 
-                Monitor { id, model_name }
+                Monitor { id, model_name, display }
             })
             .collect();
 
