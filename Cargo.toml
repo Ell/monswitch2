@@ -1,0 +1,22 @@
+cargo-features = ["strip"]
+
+[profile.release]
+strip = true
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+
+[package]
+name = "monswitch"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+iced = { version = "0.3", features = ["image", "tokio"] }
+ddc-hi = "0.4.1"
+anyhow = "1.0.53"
+reqwest = "0.11.9"
+scraper = "0.12.0"
+lazy_static = "1.4.0"
+futures = "0.3.21"
