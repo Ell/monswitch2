@@ -9,21 +9,26 @@ lazy_static! {
 }
 
 #[derive(Debug, Clone)]
-pub struct Monitor<'a> {
+pub struct Monitor {
     id: String,
     model_name: Option<String>,
-    display: &'a ddc_hi::Display,
 }
 
-impl<'a> Monitor<'a> {
-    pub(crate) async fn get_monitors() -> Result<Vec<Monitor<'a>>, Error> {
+impl Monitor {
+    pub(crate) async fn get_monitors() -> Result<Vec<Monitor>, Error> {
         let monitors: Vec<_> = ddc_hi::Display::enumerate()
-            .iter()
+            .iter_mut()
+            .filter_map(|display| {
+                match display.update_capabilities().ok() {
+                    Some(_) => Some(display),
+                    None => None,
+                }
+            })
             .map(|display| {
                 let model_name = display.info.model_name.clone();
                 let id = display.info.id.clone();
 
-                Monitor { id, model_name, display }
+                Monitor { id, model_name }
             })
             .collect();
 

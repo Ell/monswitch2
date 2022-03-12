@@ -16,7 +16,7 @@ enum Error {
 }
 
 #[derive(Debug)]
-enum Monswitch<'a> {
+enum Monswitch {
     Loading,
     Loaded { monitors: Vec<Monitor> },
     HasError,
