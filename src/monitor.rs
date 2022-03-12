@@ -17,7 +17,13 @@ pub struct Monitor {
 impl Monitor {
     pub(crate) async fn get_monitors() -> Result<Vec<Monitor>, Error> {
         let monitors: Vec<_> = ddc_hi::Display::enumerate()
-            .into_iter()
+            .iter_mut()
+            .filter_map(|display| {
+                match display.update_capabilities().ok() {
+                    Some(_) => Some(display),
+                    None => None,
+                }
+            })
             .map(|display| {
                 let model_name = display.info.model_name.clone();
                 let id = display.info.id.clone();
